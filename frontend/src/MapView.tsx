@@ -1,14 +1,11 @@
+import { useState } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 import type { Property } from "./types";
 
-type MapViewProps = {
-  properties: Property[];
-};
-
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "100%",
 };
 
 const center = {
@@ -16,7 +13,15 @@ const center = {
   lng: 139.767125,
 };
 
+type MapViewProps = {
+  properties: Property[];
+};
+
 function MapView({ properties }: MapViewProps) {
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
+    null
+  );
+
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -32,17 +37,51 @@ function MapView({ properties }: MapViewProps) {
   }
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
+    <div className="map-container">
+      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
         {properties.map((property) => (
-            <Marker
+          <Marker
             key={property.id}
             position={{
-                lat: property.latitude,
-                lng: property.longitude,
+              lat: property.latitude,
+              lng: property.longitude,
             }}
-            />
+            onClick={() => setSelectedProperty(property)}
+          />
         ))}
-    </GoogleMap>
+      </GoogleMap>
+
+      {selectedProperty !== null && (
+        <div className="map-info-panel">
+          <button
+            className="map-info-close-button"
+            onClick={() => setSelectedProperty(null)}
+          >
+            ×
+          </button>
+
+          <div className="map-info-title">選択中の物件</div>
+
+          <div className="map-info-address">{selectedProperty.address}</div>
+
+          <a
+            href={selectedProperty.source_url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            HOME'Sで開く
+          </a>
+
+          <button
+            className="map-info-delete-button"
+            onClick={() => setSelectedProperty(null)}
+          >
+            削除
+          </button>
+
+        </div>
+      )}
+    </div>
   );
 }
 

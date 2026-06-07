@@ -15,7 +15,7 @@ function App() {
   const [properties, setProperties] = useState<Property[]>([]);   // 登録済み物件の住所一覧
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
+  useEffect(() => { // 関数と依存する値を引数に取る。[adress] と書くと、addressが変わるたびに関数が実行される。[] と書くと、最初の1回だけ関数が実行される。
     async function loadProperties() {
       try {
         const data = await fetchProperties();
@@ -70,15 +70,6 @@ function App() {
         <h2>物件登録</h2>
 
         <div className="form-field">
-          <label>HOME'S URL</label>
-          <input
-            type="text"
-            value={sourceUrl} // この入力欄に表示する文字は sourceUrl の値にしてください
-            onChange={(event) => setSourceUrl(event.target.value)} // 入力欄の中身が変わったときに, 入力欄に今入っている文字を、sourceUrl に保存する. 
-          />
-        </div>
-
-        <div className="form-field">
           <label>住所</label>
           <input
             type="text"
@@ -87,27 +78,16 @@ function App() {
           />
         </div>
 
+        <div className="form-field">
+          <label>サイトURL</label>
+          <input
+            type="text"
+            value={sourceUrl} // この入力欄に表示する文字は sourceUrl の値にしてください
+            onChange={(event) => setSourceUrl(event.target.value)} // 入力欄の中身が変わったときに, 入力欄に今入っている文字を、sourceUrl に保存する. 
+          />
+        </div>
+
         <button onClick={handleSubmit}>登録</button> {/* クリックされたときにhandleSubmitを実行する. */}
-      </section>
-
-      <section className="list-section">
-        <h2>登録済み物件</h2>
-
-        <ul className="property-list">
-          {properties.map((property) => (
-            <li key={property.id} className="property-item">
-              <div className="property-address">{property.address}</div>
-
-              <div className="property-actions">
-                <a href={property.source_url} target="_blank" rel="noreferrer">
-                  HOME'Sで開く
-                </a> {/*<a> はリンクを作るHTMLタグ. _blank は新しいタブで開くことを意味する. rel="noreferrer" はセキュリティ上の理由から必要. */}
-
-                <button onClick={() => handleDelete(property.id)}>削除</button>
-              </div>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className="map-section">
