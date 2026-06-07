@@ -33,6 +33,15 @@ def health_check():
 def get_properties():
     return crud.get_properties()
 
+@app.get("/properties/{property_id}", response_model=Property)
+def get_property(property_id: int):
+    property_data = crud.get_property(property_id)
+
+    if property_data is None:
+        raise HTTPException(status_code=404, detail="property not found")
+
+    return property_data
+
 @app.post("/properties", response_model=Property) # このAPIのレスポンスは Property の形で返しますという意味
 def create_property(property_data: PropertyCreate): # POSTで送られてきたJSONを property_data という変数で受け取るという意味
     return crud.create_property(property_data)

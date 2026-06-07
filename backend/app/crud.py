@@ -121,6 +121,48 @@ def create_property(property_data: PropertyCreate):
 
     return new_property
 
+def get_property(property_id: int):
+    """
+    指定されたIDの物件をDBから1件取得する。
+
+    SELECT文で properties テーブルから対象レコードを取得する。
+    対象が存在しない場合は None を返す。
+    """
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            source_url,
+            address,
+            latitude,
+            longitude,
+            created_at
+        FROM properties
+        WHERE id = ?
+        """,
+        (property_id,),
+    )
+
+    row = cursor.fetchone()
+    conn.close()
+
+    if row is None:
+        return None
+
+    property_data = {
+        "id": row[0],
+        "source_url": row[1],
+        "address": row[2],
+        "latitude": row[3],
+        "longitude": row[4],
+        "created_at": row[5],
+    }
+
+    return property_data
 
 def delete_property(property_id: int):
     """
