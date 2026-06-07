@@ -39,3 +39,14 @@ export async function createProperty(
   const property = await response.json();
   return property;
 }
+
+// DELETE /properties/{id} を実行する関数
+export async function deleteProperty(propertyId: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/properties/${propertyId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete property");
+  }
+}

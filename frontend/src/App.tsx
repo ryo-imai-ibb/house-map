@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { createProperty, fetchProperties } from "./api";
+import { createProperty, deleteProperty, fetchProperties } from "./api";
 import type { Property } from "./types";
 
 type Property = {
@@ -51,6 +51,14 @@ function App() {
     setAddress("");
   }
 
+  // 削除ボタンを押したときに実行する関数
+  async function handleDelete(propertyId: number) {
+    await deleteProperty(propertyId);
+
+    const data = await fetchProperties();
+    setProperties(data);
+  }
+
   return (
     <div>
       <h1>物件マップ</h1>
@@ -82,7 +90,11 @@ function App() {
       <ul>
         {properties.map((property, index) => (
           <li key={index}>
-            {property.address} / {property.source_url}
+            {property.address} /{" "}
+            <a href={property.source_url} target="_blank" rel="noreferrer">
+              HOME'Sで開く
+            </a> {/*<a> はリンクを作るHTMLタグ. _blank は新しいタブで開くことを意味する. rel="noreferrer" はセキュリティ上の理由から必要. */}
+            <button onClick={() => handleDelete(property.id)}>削除</button>
           </li>
         ))}
       </ul>
