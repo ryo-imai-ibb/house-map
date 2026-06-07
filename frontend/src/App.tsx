@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { createProperty, deleteProperty, fetchProperties } from "./api";
 import "./App.css";
 import type { Property } from "./types";
+import MapView from "./MapView";
 
 function App() {
   // Reactに「変化する値」を覚えさせるための書き方．意味は下記．
@@ -107,6 +108,11 @@ function App() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="map-section">
+        <h2>地図</h2>
+        <MapView properties={properties} /> {/* Reactでは、親コンポーネントから子コンポーネントに渡す値を props と呼ぶ */}
       </section>
     </div>
   );
