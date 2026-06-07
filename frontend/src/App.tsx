@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Property = {
-  sourceUrl: string;
+  id: number;
+  source_url: string;
   address: string;
+  latitude: number;
+  longitude: number;
+  created_at: string;
 };
 
 function App() {
@@ -16,24 +20,21 @@ function App() {
   // 登録済み物件の住所一覧
   const [properties, setProperties] = useState<Property[]>([]);
 
+  useEffect(() => {
+    async function loadProperties() {
+      const response = await fetch("http://127.0.0.1:8000/properties");
+      const data = await response.json();
+      setProperties(data);
+    }
+
+    loadProperties();
+  }, []);
+
   // 登録ボタンを押したときに実行する関数。
   // 今はまだAPI通信せず、入力値をConsoleに出すだけ。
   function handleSubmit() {
-    if (sourceUrl === "" || address === "") {
-      return;
-    }
-
-    const newProperty: Property = {
-      sourceUrl: sourceUrl,
-      address: address,
-    };
-
-    // propertiesの末尾に、新しい住所を追加した配列を作る。
-    // Reactでは既存配列を直接変更せず、新しい配列を作ってsetPropertiesに渡す。
-    setProperties([...properties, newProperty]); // ...properties は 配列の中身を展開する書き方
-
-    setSourceUrl("");
-    setAddress("");
+    console.log("sourceUrl:", sourceUrl);
+    console.log("address:", address);
   }
 
   return (
@@ -67,7 +68,7 @@ function App() {
       <ul>
         {properties.map((property, index) => (
           <li key={index}>
-            {property.address} / {property.sourceUrl}
+            {property.address} / {property.source_url}
           </li>
         ))}
       </ul>

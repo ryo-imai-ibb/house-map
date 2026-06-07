@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import PropertyCreate, Property
 from app import crud
@@ -24,6 +25,34 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan) # このFastAPIアプリは、起動時・終了時の処理として lifespan を使いますという意味
+
+"""CORS（Cross-Origin Resource Sharing）を許可するためのミドルウェア。
+CORS
+→ ブラウザが、異なるオリジン間の通信を制限する仕組み。
+
+オリジン
+→ scheme + host + port の組み合わせ。
+
+http://127.0.0.1:5173
+と
+http://127.0.0.1:8000
+は port が違うので別オリジン。
+
+http://localhost:5173
+と
+http://127.0.0.1:5173
+は host が違うので別オリジン（同じものを指すがブラウザでは区別される）。
+"""
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[ # Reactからのアクセスを許可
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
     
 @app.get("/health")
 def health_check():
