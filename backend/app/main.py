@@ -46,6 +46,15 @@ def get_property(property_id: int):
 def create_property(property_data: PropertyCreate): # POSTで送られてきたJSONを property_data という変数で受け取るという意味
     return crud.create_property(property_data)
 
+@app.put("/properties/{property_id}", response_model=Property)
+def update_property(property_id: int, property_data: PropertyCreate):
+    updated_property = crud.update_property(property_id, property_data)
+
+    if updated_property is None:
+        raise HTTPException(status_code=404, detail="property not found")
+
+    return updated_property
+
 @app.delete("/properties/{property_id}") # {property_id} はURLの一部で、実際の値はAPI呼び出しのときに指定される。例えば /properties/123 なら property_id は 123 になる。
 def delete_property(property_id: int):
     deleted_count = crud.delete_property(property_id)

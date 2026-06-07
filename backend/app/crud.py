@@ -164,6 +164,79 @@ def get_property(property_id: int):
 
     return property_data
 
+def update_property(property_id: int, property_data: PropertyCreate):
+    """
+    指定されたIDの物件情報を更新する。
+
+    UPDATE文で properties テーブルの source_url と address を更新する。
+    対象が存在しない場合は None を返す。
+
+    注意:
+    今は住所→緯度経度変換をまだ実装していないため、
+    latitude / longitude は仮の固定値で更新する。
+    """
+
+    latitude = 35.689634
+    longitude = 139.692101
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE properties
+        SET
+            source_url = ?,
+            address = ?,
+            latitude = ?,
+            longitude = ?
+        WHERE id = ?
+        """,
+        (
+            str(property_data.source_url),
+            property_data.address,
+            latitude,
+            longitude,
+            property_id,
+        ),
+    )
+
+    updated_count = cursor.rowcount
+    conn.commit()
+
+    if updated_count == 0:
+        conn.close()
+        return None
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            source_url,
+            address,
+            latitude,
+            longitude,
+            created_at
+        FROM properties
+        WHERE id = ?
+        """,
+        (property_id,),
+    )
+
+    row = cursor.fetchone()
+    conn.close()
+
+    updated_property = {
+        "id": row[0],
+        "source_url": row[1],
+        "address": row[2],
+        "latitude": row[3],
+        "longitude": row[4],
+        "created_at": row[5],
+    }
+
+    return updated_property
+
 def delete_property(property_id: int):
     """
     指定されたIDの物件をDBから削除する。
