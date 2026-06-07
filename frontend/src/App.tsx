@@ -104,7 +104,7 @@ function App() {
 
       <section className="map-section">
         <h2>地図</h2>
-        <MapView properties={properties} /> {/* Reactでは、親コンポーネントから子コンポーネントに渡す値を props と呼ぶ */}
+        <MapView properties={properties} onDelete={handleDelete} /> {/* Reactでは、親コンポーネントから子コンポーネントに渡す値を props と呼ぶ */}
       </section>
     </div>
   );

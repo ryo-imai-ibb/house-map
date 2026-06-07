@@ -28,7 +28,7 @@ class PropertyCreate(BaseModel):
     """
     source_url: HttpUrl # source_url はURL形式である必要がある
     address: str = Field(min_length=1) # address は文字列 かつ 1文字以上である必要がある
-    rent: str = Field(min_length=1) # rent は文字列 かつ 1文字以上である必要がある
+    rent: str 
 
 class Property(PropertyCreate):
     """

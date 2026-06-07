@@ -15,9 +15,10 @@ const center = {
 
 type MapViewProps = {
   properties: Property[];
+  onDelete: (propertyId: number) => Promise<void>;
 };
 
-function MapView({ properties }: MapViewProps) {
+function MapView({ properties, onDelete }: MapViewProps) {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
   );
@@ -74,7 +75,10 @@ function MapView({ properties }: MapViewProps) {
 
           <button
             className="map-info-delete-button"
-            onClick={() => setSelectedProperty(null)}
+            onClick={async () => {
+              await onDelete(selectedProperty.id);
+              setSelectedProperty(null);
+            }}
           >
             削除
           </button>

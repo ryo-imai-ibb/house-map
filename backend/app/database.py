@@ -42,7 +42,7 @@ def init_db():
             rent TEXT NOT NULL,
             latitude REAL NOT NULL,
             longitude REAL NOT NULL,
-            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
         """
     )
