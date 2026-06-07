@@ -1,122 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+
+type Property = {
+  sourceUrl: string;
+  address: string;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  // Reactに「変化する値」を覚えさせるための書き方．意味は下記．
+  // sourceUrl：値の変数名。
+  // setSourceUrl：関数の変数名。
+  // useState：「Reactが覚えておく値」と「その値を更新して画面再描画を起こす関数」を返す関数．値は引数で指定する．
+  const [sourceUrl, setSourceUrl] = useState("");
+  const [address, setAddress] = useState("");
+
+  // 登録済み物件の住所一覧
+  const [properties, setProperties] = useState<Property[]>([]);
+
+  // 登録ボタンを押したときに実行する関数。
+  // 今はまだAPI通信せず、入力値をConsoleに出すだけ。
+  function handleSubmit() {
+    if (sourceUrl === "" || address === "") {
+      return;
+    }
+
+    const newProperty: Property = {
+      sourceUrl: sourceUrl,
+      address: address,
+    };
+
+    // propertiesの末尾に、新しい住所を追加した配列を作る。
+    // Reactでは既存配列を直接変更せず、新しい配列を作ってsetPropertiesに渡す。
+    setProperties([...properties, newProperty]); // ...properties は 配列の中身を展開する書き方
+
+    setSourceUrl("");
+    setAddress("");
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div>
+      <h1>物件マップ</h1>
 
-      <div className="ticks"></div>
+      <h2>物件登録</h2>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <div>
+        <label>HOME'S URL</label>
+        <input
+          type="text"
+          value={sourceUrl} // この入力欄に表示する文字は sourceUrl の値にしてください
+          onChange={(event) => setSourceUrl(event.target.value)} // 入力欄の中身が変わったときに, 入力欄に今入っている文字を、sourceUrl に保存する. 
+        />
+      </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <div>
+        <label>住所</label>
+        <input
+          type="text"
+          value={address}
+          onChange={(event) => setAddress(event.target.value)}
+        />
+      </div>
+
+      <button onClick={handleSubmit}>登録</button> {/* クリックされたときにhandleSubmitを実行する. */}
+
+      <h2>登録済み物件</h2>
+
+      <ul>
+        {properties.map((property, index) => (
+          <li key={index}>
+            {property.address} / {property.sourceUrl}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default App
+export default App;
