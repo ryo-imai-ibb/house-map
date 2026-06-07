@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { createProperty, deleteProperty, fetchProperties } from "./api";
+import "./App.css";
 import type { Property } from "./types";
-
-type Property = {
-  id: number;
-  source_url: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  created_at: string;
-};
 
 function App() {
   // Reactに「変化する値」を覚えさせるための書き方．意味は下記．
@@ -69,45 +61,53 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="app">
       <h1>物件マップ</h1>
-      {errorMessage !== "" && <p>{errorMessage}</p>} {/* errorMessageが空でないときに、<p>タグでerrorMessageを表示する. */}
+      {errorMessage !== "" && <p className="error-message">{errorMessage}</p>} {/* errorMessageが空でないときに、<p>タグでerrorMessageを表示する. */}
 
-      <h2>物件登録</h2>
+      <section className="form-section">
+        <h2>物件登録</h2>
 
-      <div>
-        <label>HOME'S URL</label>
-        <input
-          type="text"
-          value={sourceUrl} // この入力欄に表示する文字は sourceUrl の値にしてください
-          onChange={(event) => setSourceUrl(event.target.value)} // 入力欄の中身が変わったときに, 入力欄に今入っている文字を、sourceUrl に保存する. 
-        />
-      </div>
+        <div className="form-field">
+          <label>HOME'S URL</label>
+          <input
+            type="text"
+            value={sourceUrl} // この入力欄に表示する文字は sourceUrl の値にしてください
+            onChange={(event) => setSourceUrl(event.target.value)} // 入力欄の中身が変わったときに, 入力欄に今入っている文字を、sourceUrl に保存する. 
+          />
+        </div>
 
-      <div>
-        <label>住所</label>
-        <input
-          type="text"
-          value={address}
-          onChange={(event) => setAddress(event.target.value)}
-        />
-      </div>
+        <div className="form-field">
+          <label>住所</label>
+          <input
+            type="text"
+            value={address}
+            onChange={(event) => setAddress(event.target.value)}
+          />
+        </div>
 
-      <button onClick={handleSubmit}>登録</button> {/* クリックされたときにhandleSubmitを実行する. */}
+        <button onClick={handleSubmit}>登録</button> {/* クリックされたときにhandleSubmitを実行する. */}
+      </section>
 
-      <h2>登録済み物件</h2>
+      <section className="list-section">
+        <h2>登録済み物件</h2>
 
-      <ul>
-        {properties.map((property, index) => (
-          <li key={index}>
-            {property.address} /{" "}
-            <a href={property.source_url} target="_blank" rel="noreferrer">
-              HOME'Sで開く
-            </a> {/*<a> はリンクを作るHTMLタグ. _blank は新しいタブで開くことを意味する. rel="noreferrer" はセキュリティ上の理由から必要. */}
-            <button onClick={() => handleDelete(property.id)}>削除</button>
-          </li>
-        ))}
-      </ul>
+        <ul className="property-list">
+          {properties.map((property) => (
+            <li key={property.id} className="property-item">
+              <div className="property-address">{property.address}</div>
+
+              <div className="property-actions">
+                <a href={property.source_url} target="_blank" rel="noreferrer">
+                  HOME'Sで開く
+                </a> {/*<a> はリンクを作るHTMLタグ. _blank は新しいタブで開くことを意味する. rel="noreferrer" はセキュリティ上の理由から必要. */}
+
+                <button onClick={() => handleDelete(property.id)}>削除</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }
