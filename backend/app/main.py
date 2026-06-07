@@ -44,11 +44,17 @@ def get_property(property_id: int):
 
 @app.post("/properties", response_model=Property) # このAPIのレスポンスは Property の形で返しますという意味
 def create_property(property_data: PropertyCreate): # POSTで送られてきたJSONを property_data という変数で受け取るという意味
-    return crud.create_property(property_data)
+    try:
+        return crud.create_property(property_data)
+    except RuntimeError as e: # RuntimeError そのままだと、FastAPI側では 500 Internal Server Error　となり原因が分かりづらい
+        raise HTTPException(status_code=400, detail=str(e)) # ユーザー入力側の問題として 400
 
 @app.put("/properties/{property_id}", response_model=Property)
 def update_property(property_id: int, property_data: PropertyCreate):
-    updated_property = crud.update_property(property_id, property_data)
+    try:
+        updated_property = crud.update_property(property_id, property_data)
+    except RuntimeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     if updated_property is None:
         raise HTTPException(status_code=404, detail="property not found")

@@ -6,10 +6,21 @@ R: Read    読み取る
 U: Update  更新する
 D: Delete  削除する
 
-service.py や repository.py みたいな名前にすることもある。
+service.py や repository.py みたいな名前にすることもある.
+
+HTTPException は crud.py ではなく main.py で 記述する.
+
+crud.py
+→ データ操作・内部処理
+
+main.py
+→ HTTP APIとして何を返すか
+
+なので，crud.py はなるべくHTTPのことを知らない方がきれい.
 """
 from app.database import get_connection
 from app.schemas import PropertyCreate
+from app.geocoding import geocode_address
 
 
 def get_properties():
@@ -64,8 +75,7 @@ def create_property(property_data: PropertyCreate):
     そのため、INSERT文では created_at を指定しない。
     """
 
-    latitude = 35.689634
-    longitude = 139.692101
+    latitude, longitude = geocode_address(property_data.address)
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -176,8 +186,7 @@ def update_property(property_id: int, property_data: PropertyCreate):
     latitude / longitude は仮の固定値で更新する。
     """
 
-    latitude = 35.689634
-    longitude = 139.692101
+    latitude, longitude = geocode_address(property_data.address)
 
     conn = get_connection()
     cursor = conn.cursor()
