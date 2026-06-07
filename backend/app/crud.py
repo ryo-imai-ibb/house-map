@@ -39,6 +39,7 @@ def get_properties():
             id,
             source_url,
             address,
+            rent,
             latitude,
             longitude,
             created_at
@@ -56,9 +57,10 @@ def get_properties():
             "id": row[0],
             "source_url": row[1],
             "address": row[2],
-            "latitude": row[3],
-            "longitude": row[4],
-            "created_at": row[5],
+            "rent": row[3],
+            "latitude": row[4],
+            "longitude": row[5],
+            "created_at": row[6],
         }
         properties.append(property_data)
 
@@ -85,14 +87,16 @@ def create_property(property_data: PropertyCreate):
         INSERT INTO properties (
             source_url,
             address,
+            rent,
             latitude,
             longitude
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
         """,
         (
             str(property_data.source_url),
             property_data.address,
+            property_data.rent,
             latitude,
             longitude,
         ),
@@ -108,6 +112,7 @@ def create_property(property_data: PropertyCreate):
             id,
             source_url,
             address,
+            rent,
             latitude,
             longitude,
             created_at
@@ -124,9 +129,10 @@ def create_property(property_data: PropertyCreate):
         "id": row[0],
         "source_url": row[1],
         "address": row[2],
-        "latitude": row[3],
-        "longitude": row[4],
-        "created_at": row[5],
+        "rent": row[3],
+        "latitude": row[4],
+        "longitude": row[5],
+        "created_at": row[6],
     }
 
     return new_property
@@ -148,6 +154,7 @@ def get_property(property_id: int):
             id,
             source_url,
             address,
+            rent,
             latitude,
             longitude,
             created_at
@@ -167,9 +174,10 @@ def get_property(property_id: int):
         "id": row[0],
         "source_url": row[1],
         "address": row[2],
-        "latitude": row[3],
-        "longitude": row[4],
-        "created_at": row[5],
+        "rent": row[3],
+        "latitude": row[4],
+        "longitude": row[5],
+        "created_at": row[6],
     }
 
     return property_data
@@ -197,6 +205,7 @@ def update_property(property_id: int, property_data: PropertyCreate):
         SET
             source_url = ?,
             address = ?,
+            rent = ?,
             latitude = ?,
             longitude = ?
         WHERE id = ?
@@ -204,6 +213,7 @@ def update_property(property_id: int, property_data: PropertyCreate):
         (
             str(property_data.source_url),
             property_data.address,
+            property_data.rent,
             latitude,
             longitude,
             property_id,
@@ -223,6 +233,7 @@ def update_property(property_id: int, property_data: PropertyCreate):
             id,
             source_url,
             address,
+            rent,
             latitude,
             longitude,
             created_at
@@ -239,9 +250,10 @@ def update_property(property_id: int, property_data: PropertyCreate):
         "id": row[0],
         "source_url": row[1],
         "address": row[2],
-        "latitude": row[3],
-        "longitude": row[4],
-        "created_at": row[5],
+        "rent": row[3],
+        "latitude": row[4],
+        "longitude": row[5],
+        "created_at": row[6],
     }
 
     return updated_property

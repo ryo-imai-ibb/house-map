@@ -12,6 +12,7 @@ function App() {
   // useState：「Reactが覚えておく値」と「その値を更新して画面再描画を起こす関数」を返す関数．値は引数で指定する．
   const [sourceUrl, setSourceUrl] = useState("");
   const [address, setAddress] = useState("");
+  const [rent, setRent] = useState("");
   const [properties, setProperties] = useState<Property[]>([]);   // 登録済み物件の住所一覧
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -30,8 +31,8 @@ function App() {
 
   // 登録ボタンを押したときに実行する関数。
   async function handleSubmit() {
-    if (sourceUrl === "" || address === "") {
-      setErrorMessage("URLと住所を入力してください");
+    if (sourceUrl === "" || address === "" || rent === "") {
+      setErrorMessage("すべてのフィールドを入力してください");
       return;
     }
 
@@ -41,6 +42,7 @@ function App() {
       await createProperty({
         source_url: sourceUrl,
         address: address,
+        rent: rent,
       });
 
       const data = await fetchProperties();
@@ -48,6 +50,7 @@ function App() {
 
       setSourceUrl("");
       setAddress("");
+      setRent("");
     } catch {
       setErrorMessage("物件の登録に失敗しました");
     }
@@ -75,6 +78,15 @@ function App() {
             type="text"
             value={address}
             onChange={(event) => setAddress(event.target.value)}
+          />
+        </div>
+
+        <div className="form-field">
+          <label>家賃</label>
+          <input
+            type="text"
+            value={rent}
+            onChange={(event) => setRent(event.target.value)}
           />
         </div>
 

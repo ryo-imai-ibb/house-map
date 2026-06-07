@@ -39,9 +39,10 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             source_url TEXT NOT NULL,
             address TEXT NOT NULL,
+            rent TEXT NOT NULL,
             latitude REAL NOT NULL,
             longitude REAL NOT NULL,
-            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         )
         """
     )

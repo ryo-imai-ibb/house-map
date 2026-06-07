@@ -2,11 +2,7 @@ import type { Property } from "./types";
 
 const API_BASE_URL = "http://127.0.0.1:8000";
 
-// POST /properties に送るデータの形
-export type PropertyCreate = {
-  source_url: string;
-  address: string;
-};
+
 
 // GET /properties を実行する関数
 export async function fetchProperties(): Promise<Property[]> { // 非同期処理の結果として、Property配列を返す
