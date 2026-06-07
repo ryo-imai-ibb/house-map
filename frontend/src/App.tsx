@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { createProperty, fetchProperties } from "./api";
+import type { Property } from "./types";
+
 type Property = {
   id: number;
   source_url: string;
@@ -31,10 +34,21 @@ function App() {
   }, []);
 
   // 登録ボタンを押したときに実行する関数。
-  // 今はまだAPI通信せず、入力値をConsoleに出すだけ。
-  function handleSubmit() {
-    console.log("sourceUrl:", sourceUrl);
-    console.log("address:", address);
+  async function handleSubmit() {
+    if (sourceUrl === "" || address === "") {
+      return;
+    }
+
+    await createProperty({
+      source_url: sourceUrl,
+      address: address,
+    });
+
+    const data = await fetchProperties();
+    setProperties(data);
+
+    setSourceUrl("");
+    setAddress("");
   }
 
   return (
