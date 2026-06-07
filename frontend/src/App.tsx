@@ -19,15 +19,17 @@ function App() {
   // useState：「Reactが覚えておく値」と「その値を更新して画面再描画を起こす関数」を返す関数．値は引数で指定する．
   const [sourceUrl, setSourceUrl] = useState("");
   const [address, setAddress] = useState("");
-
-  // 登録済み物件の住所一覧
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<Property[]>([]);   // 登録済み物件の住所一覧
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function loadProperties() {
-      const response = await fetch("http://127.0.0.1:8000/properties");
-      const data = await response.json();
-      setProperties(data);
+      try {
+        const data = await fetchProperties();
+        setProperties(data);
+      } catch {
+        setErrorMessage("物件一覧の取得に失敗しました");
+      }
     }
 
     loadProperties();
@@ -36,19 +38,26 @@ function App() {
   // 登録ボタンを押したときに実行する関数。
   async function handleSubmit() {
     if (sourceUrl === "" || address === "") {
+      setErrorMessage("URLと住所を入力してください");
       return;
     }
 
-    await createProperty({
-      source_url: sourceUrl,
-      address: address,
-    });
+    try {
+      setErrorMessage("");
 
-    const data = await fetchProperties();
-    setProperties(data);
+      await createProperty({
+        source_url: sourceUrl,
+        address: address,
+      });
 
-    setSourceUrl("");
-    setAddress("");
+      const data = await fetchProperties();
+      setProperties(data);
+
+      setSourceUrl("");
+      setAddress("");
+    } catch {
+      setErrorMessage("物件の登録に失敗しました");
+    }
   }
 
   // 削除ボタンを押したときに実行する関数
@@ -62,6 +71,7 @@ function App() {
   return (
     <div>
       <h1>物件マップ</h1>
+      {errorMessage !== "" && <p>{errorMessage}</p>} {/* errorMessageが空でないときに、<p>タグでerrorMessageを表示する. */}
 
       <h2>物件登録</h2>
 
