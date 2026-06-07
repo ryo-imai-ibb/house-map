@@ -120,3 +120,29 @@ def create_property(property_data: PropertyCreate):
     }
 
     return new_property
+
+
+def delete_property(property_id: int):
+    """
+    指定されたIDの物件をDBから削除する。
+
+    DELETE文で properties テーブルから対象レコードを削除する。
+    """
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM properties
+        WHERE id = ?
+        """,
+        (property_id,),
+    )
+
+    deleted_count = cursor.rowcount
+
+    conn.commit()
+    conn.close()
+
+    return deleted_count

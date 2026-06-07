@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from app.schemas import PropertyCreate, Property
 from app import crud
@@ -36,3 +36,12 @@ def get_properties():
 @app.post("/properties", response_model=Property) # このAPIのレスポンスは Property の形で返しますという意味
 def create_property(property_data: PropertyCreate): # POSTで送られてきたJSONを property_data という変数で受け取るという意味
     return crud.create_property(property_data)
+
+@app.delete("/properties/{property_id}") # {property_id} はURLの一部で、実際の値はAPI呼び出しのときに指定される。例えば /properties/123 なら property_id は 123 になる。
+def delete_property(property_id: int):
+    deleted_count = crud.delete_property(property_id)
+
+    if deleted_count == 0:
+        raise HTTPException(status_code=404, detail="property not found")
+
+    return {"message": "property deleted"}
